@@ -20,4 +20,5 @@ directory open a python shell.
 Execute the following:
 >> project2.py
 
-This will start a local web server at localhost:8080 (or <TBD> on the MAC).
+This will start a local web server at localhost:8080 (or http://0.0.0.0:8080/
+on the MAC if localhost is not defined).
