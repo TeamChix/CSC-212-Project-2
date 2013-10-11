@@ -1,0 +1,7 @@
+README for initial design 1
+Initial design 1 may be run using the python environment.
+webpy needs to be installed.
+From the project2 directory in a python shell execute the following:
+>> project2.py
+
+This will start a local web server at localhost:8080 (or <TBD> on the MAC).
