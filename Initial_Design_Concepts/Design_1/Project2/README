@@ -1,7 +1,23 @@
 README for initial design 1
-Initial design 1 may be run using the python environment.
-webpy needs to be installed.
-From the project2 directory in a python shell execute the following:
+-----------------------------------
+
+Initial design 1 used the current University of Rochester design to launch
+some concept pages for displaying the availability of rooms on campus during
+room selection.
+
+The 3 designs used d3 for a variety of visualizations.
+Campus areas, building, room type and count were provided.
+
+Remaining rooms were visualized using a stacked barchart, zoomable bubble
+chart and zoomable treemap
+
+Clone the repository TeamChix/CSC-212-Project-2.
+Initial design 1 may be run using the python environment, webpy needs to be
+installed.
+
+From the CSC-212-Project-2/Initial_Design_Concepts/Design_1/Project2/src
+directory open a python shell.
+Execute the following:
 >> project2.py
 
 This will start a local web server at localhost:8080 (or <TBD> on the MAC).
