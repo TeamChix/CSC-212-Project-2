@@ -5,7 +5,7 @@ and open the template in the editor.
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title></title>
+    <title>Housing Selection That Remain Open</title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
     <script type="text/javascript" src="js/d3.v3.min.js"></script>
     <script type="text/javascript" src="js/d3.layout.js"></script>
@@ -15,18 +15,65 @@ and open the template in the editor.
     <script type="text/javascript" src="js/buildSideBar.js"></script>
     <link href="css/project2.css" media="all" type="text/css" rel="stylesheet">
     <style type="text/css">
+        svg {
+            width: 850px;
+            height: 500px;
+            border: solid 1px #ccc;
+            font: 10px sans-serif;
+            shape-rendering: crispEdges;
+            margin-left: 250px;
+            /*margin-top: 50px;*/
+        }
     </style>
   </head>
   <body>
-    <div id="viz"></div>
-        <a href="#" id="download">Download</a>
+        <div id="customDiv1"></div>
+        <div id="customDiv2"></div>
+        <div id="customDiv3"></div>
+        <div id="header">
+            <p></p>
+        </div>
+    <div id="sidebar">
+        <script type="text/javascript">
+            var roomData = getHousingDataTreemap();
+            makeSideBarListing(roomData);
+        </script>
+    </div>
+
+    <div id="floorplancontainer">
+      <div id="viz"></div>
         <script type="text/javascript">
 
         d3.xml("Burton_2ndFloor_plain.svg", "img/svg+xml", function(xml) {
                 var importedNode = document.importNode(xml.documentElement, true);
                 d3.select("#viz").node().appendChild(importedNode);
-    });
+
+                var roomlayer = d3.select("#availableLayer");
+                roomlayer.selectAll("rect")
+                    .on("click", function(d) { return moveRoom(this)});
+
+        });
+
+        function moveRoom(t) {
+            var roomRect = d3.select(t);
+            var roomRectId = roomRect.attr("id");
+            var roomType = roomRect.attr("myType");
+            var newRoomRectId = "takenRoom" + roomRectId[roomRectId.length - 1] + roomRectId[roomRectId.length - 1]
+            var takenlayer = d3.select("#takenLayer");
+            takenlayer.insert("rect")
+                    .attr("x",roomRect.attr("x"))
+                    .attr("y",roomRect.attr("y"))
+                    .attr("width",roomRect.attr("width"))
+                    .attr("height",roomRect.attr("height"))
+                    .attr("id", newRoomRectId)
+                    .style("fill", "#ff0000")
+                    .style("fill-opacity", "0.4")
+                    .append("title").text("taken");
+            d3.select(t).remove();
+            return roomType;
+        }
 
         </script>
+    </div>
   </body>
 </html>
