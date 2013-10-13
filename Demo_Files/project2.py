@@ -17,7 +17,7 @@ __date__ ="$Oct 3, 2013 12:47:14 PM$"
 # Redirect to index.html file
 class Index(object):
   def GET(self):
-    raise web.seeother('../static/index.html');
+    raise web.seeother('../index.html');
 
 
 urls = (

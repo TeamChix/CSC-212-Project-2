@@ -20,26 +20,7 @@ body {
     margin: auto;
     padding: 0;
 }
-#floorplancontainer {
-    background-color: #F8F7F6;
-    border-left: 1px solid #CCCCCC;
-    position: absolute;
-    top: 95px;
-    bottom: 0;
-    left: 250px;
-    width: 1100px;
-    overflow: auto;
-}
-
-#floorplancontent {
-    margin: 0;
-    padding: 20px 40px 40px;
-}
-
-#form {
-    position: relative;
-}
-
+/* Sidebar frame on the left of the page */
 #sidebar {
     background-color: #F8F7F6;
     color: #00467F;
@@ -51,6 +32,69 @@ body {
     overflow: auto;
 }
 
+#maincontainer {
+    background-color: #F8F7F6;
+    border-left: 1px solid #CCCCCC;
+    position: absolute;
+    top: 95px;
+    bottom: 0;
+    left: 250px;
+    width: 1100px;
+    overflow: auto;
+}
+
+#quad {
+    background-color: #F8F7F6;
+    border-left: 1px solid #CCCCCC;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 200px;
+    overflow: auto;
+}
+
+#jackson {
+    background-color: #F8F7F6;
+    border-left: 1px solid #CCCCCC;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 200px;
+    width: 200px;
+    overflow: auto;
+}
+#hillcourt{
+    background-color: #F8F7F6;
+    border-left: 1px solid #CCCCCC;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 400px;
+    width: 200px;
+    overflow: auto;
+}
+#southside {
+    background-color: #F8F7F6;
+    border-left: 1px solid #CCCCCC;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 600px;
+    width: 220px;
+    overflow: auto;
+}
+#riverview {
+    background-color: #F8F7F6;
+    border-left: 1px solid #CCCCCC;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 820px;
+    width: 200px;
+    overflow: auto;
+}
+/* css for the sidebar that is built in js */
 h2sb {
     right: 15px;
     font-size: 16px;
@@ -78,3 +122,13 @@ li {
     font-weight: normal;
     line-height: 100%;
 }
+/*
+#floorplancontent {
+    margin: 0;
+    padding: 20px 40px 40px;
+}
+
+#form {
+    position: relative;
+}*/
+
