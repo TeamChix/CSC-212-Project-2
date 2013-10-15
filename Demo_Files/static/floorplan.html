@@ -39,6 +39,10 @@ and open the template in the editor.
 
     <div id="maincontainer">
       <div id="viz"></div>
+      <div id="roomSelection">
+          <button>Confirm</button>
+          <button>Upate</button>
+      </div>
         <script type="text/javascript">
 
         d3.xml("Burton_2ndFloor_plain.svg", "img/svg+xml", function(xml) {
@@ -52,10 +56,46 @@ and open the template in the editor.
         });
 
         function moveRoom(t) {
+            // first check to see if there is a currently selected room
+            var selectedlayer = d3.select("#selectedLayer");
+            var oldSelection = selectedlayer.selectAll("rect");
+
+            if (oldSelection[0].length > 0) {
+                // return the oldselected room to the available rooms
+                var availableRect = oldSelection[0];
+                var rectId = availableRect.attr("id");
+                var availablelayer = d3.select("#availableLayer");
+                var availableRectId = "availableRoom" + rectId[rectId.length - 2] + rectId[rectId.length - 1];
+                var oldRoom = oldSelection[0];
+                // add using the rect dimensions but relabeling as avaiable
+                availablelayer.insert("rect")
+                    .attr("x",oldRoom.attr("x"))
+                    .attr("y",oldRoom.attr("y"))
+                    .attr("width",oldRoom.attr("width"))
+                    .attr("height",oldRoom.attr("height"))
+                    .attr("id", availableRectId)
+                    .style("fill", "#00ff00")
+                    .style("fill-opacity", "0.4")
+                    .append("title").text("available")
+                    .on("click", function(d) { return moveRoom(this)});
+                d3.select(oldSelection[0]).remove();
+            }
+            // now make the clicked room the selected room
             var roomRect = d3.select(t);
             var roomRectId = roomRect.attr("id");
             var roomType = roomRect.attr("myType");
-            var newRoomRectId = "takenRoom" + roomRectId[roomRectId.length - 2] + roomRectId[roomRectId.length - 1]
+            var newRoomRectId = "selectedRoom" + roomRectId[roomRectId.length - 2] + roomRectId[roomRectId.length - 1];
+            // add it to the selected layer with the old rect diemensions - new characterization of selected
+            selectedlayer.insert("rect")
+                    .attr("x",roomRect.attr("x"))
+                    .attr("y",roomRect.attr("y"))
+                    .attr("width",roomRect.attr("width"))
+                    .attr("height",roomRect.attr("height"))
+                    .attr("id", newRoomRectId)
+                    .style("fill", "#dddd00")
+                    .style("fill-opacity", "0.4")
+                    .append("title").text("selected");
+            /*var newRoomRectId = "takenRoom" + roomRectId[roomRectId.length - 2] + roomRectId[roomRectId.length - 1]
             var takenlayer = d3.select("#takenLayer");
             takenlayer.insert("rect")
                     .attr("x",roomRect.attr("x"))
@@ -65,7 +105,8 @@ and open the template in the editor.
                     .attr("id", newRoomRectId)
                     .style("fill", "#ff0000")
                     .style("fill-opacity", "0.4")
-                    .append("title").text("taken");
+                    .append("title").text("taken");*/
+            // remove the selected room from the availableLayer
             d3.select(t).remove();
             return roomType;
         }
