@@ -94,6 +94,22 @@ body {
     width: 200px;
     overflow: auto;
 }
+
+#instructions {
+    font-size: large;
+    font-weight: bold;
+    text-align: center;
+}
+
+#confirmRoom:disabled {
+    background-color: #dddddd;
+}
+
+#confirmRoom {
+    font-weight: bold;
+    font-size:xx-large;
+    background-color: #ffff00;
+}
 /* css for the sidebar that is built in js */
 h2sb {
     right: 15px;

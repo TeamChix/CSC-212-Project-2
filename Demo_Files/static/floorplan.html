@@ -1,6 +1,8 @@
 <!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
+    Display the floor plan of the selected building and floor.
+    Manipulate the rooms as if other were selecting rooms.
+    When the students time for selection arrives enable selection of a room.
+    When the student confirms the room move it to taken and then disable room selection
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -32,43 +34,88 @@ and open the template in the editor.
     </div>
     <div id="sidebar" >
         <script type="text/javascript">
+            // build the side bar dynamically from the current building/room availablity
+            // static for this but could be implemented to update from a database
             var roomData = getHousingDataTreemap();
             makeSideBarListing(roomData);
         </script>
     </div>
 
     <div id="maincontainer">
+        <!-- the viz div holds all the D3 svg components -->
       <div id="viz"></div>
-      <div id="roomSelection">
-          <button>Confirm</button>
-          <button>Upate</button>
-      </div>
-        <script type="text/javascript">
 
+      <!-- single button to confirm the selection of the room -->
+      <div id="roomSelection">
+          <input type="button" id="confirmRoom" disabled value="Confirm" onclick="acceptRoomSelection();">
+          <p id="instructions">      Your selection time is available when the "Confirm" button is enabled.</p>
+          <p id="instructions">      Please click on your room choice then click on "Confirm". </p>
+      </div>
+
+      <script type="text/javascript">
+        // javascript to manage the updating, selection and confirmation of room selection
+        var timer = 0;
+        var countToConfirm = 7;
+
+        // read the svg floor plan and add the elements to the visualization
         d3.xml("Burton_2ndFloor_plain.svg", "img/svg+xml", function(xml) {
                 var importedNode = document.importNode(xml.documentElement, true);
                 d3.select("#viz").node().appendChild(importedNode);
 
-                var roomlayer = d3.select("#availableLayer");
-                roomlayer.selectAll("rect")
-                    .on("click", function(d) { return moveRoom(this)});
+                 // set up a timer to change some rooms from available to unavailable
+                 // also to enable the confirm room selection button for use and enable
+                 // the onclick selection of rooms.
+                 var interval = setInterval(function() {
+                        // make an available room unavailable
+                        var availableRooms = d3.select("#availableLayer").selectAll("rect");
+                        var roomCount = availableRooms.size();
+                        var removeRoom = 0;
 
+                        // don't try to delete rooms that don't exist
+                        if (roomCount > 0) {
+                            // don't randomixe at 2 rooms or less
+                            if (roomCount > 2) {
+                                removeRoom = getRandomInt(0,roomCount-1);
+                            }
+                            // move the room from availble to taken
+                            makeUnavailable(availableRooms, removeRoom);
+                        }
+
+                        // add one to the timer - enable selection of rooms at count of 5
+                        // but don't keep incrementing the timer - could do this if we wanted
+                        // to shut it down at the correct time - but this is a prototype :-)
+                        if (timer < countToConfirm) {
+                            timer = timer + 1;
+                        }
+                        if (timer == countToConfirm) {
+                            // enable the confirm room button
+                            document.getElementById("confirmRoom").disabled = false;
+                            // select the availableLayer rects and give them an onclick function
+                            // now that the student is permitted to select a room
+                            var roomlayer = d3.select("#availableLayer");
+                            roomlayer.selectAll("rect")
+                                .on("click", function(d) { return moveRoom(this)});
+                            // timers use is done - increment so that we don't keep doing this
+                            timer = timer + 1;
+                        }
+                    }, 5000);
         });
 
+        // move a room from availble to selected.
+        // the room is not considered "taken" until the "confirm" button is pressed
         function moveRoom(t) {
-            // first check to see if there is a currently selected room
             var selectedlayer = d3.select("#selectedLayer");
             var oldSelection = selectedlayer.selectAll("rect");
 
+            // first check to see if there is a currently selected room
             if (oldSelection[0].length > 0) {
-                // return the oldselected room to the available rooms
-                var availableRect = oldSelection[0];
-                var rectId = availableRect.attr("id");
-                var availablelayer = d3.select("#availableLayer");
+                // return the old selected room to the available rooms
+                var oldRoom = oldSelection;
+                var rectId = oldRoom.attr("id");
+                var availableLayer = d3.select("#availableLayer");
                 var availableRectId = "availableRoom" + rectId[rectId.length - 2] + rectId[rectId.length - 1];
-                var oldRoom = oldSelection[0];
-                // add using the rect dimensions but relabeling as avaiable
-                availablelayer.insert("rect")
+                // add using the rect dimensions but relabeling as avaiable and making green
+                availableLayer.insert("rect")
                     .attr("x",oldRoom.attr("x"))
                     .attr("y",oldRoom.attr("y"))
                     .attr("width",oldRoom.attr("width"))
@@ -78,8 +125,12 @@ and open the template in the editor.
                     .style("fill-opacity", "0.4")
                     .append("title").text("available")
                     .on("click", function(d) { return moveRoom(this)});
-                d3.select(oldSelection[0]).remove();
+                
+                // remove the previously selected room from the selected layer
+                selectedlayer.selectAll("rect")
+                      .remove();
             }
+
             // now make the clicked room the selected room
             var roomRect = d3.select(t);
             var roomRectId = roomRect.attr("id");
@@ -95,21 +146,86 @@ and open the template in the editor.
                     .style("fill", "#dddd00")
                     .style("fill-opacity", "0.4")
                     .append("title").text("selected");
-            /*var newRoomRectId = "takenRoom" + roomRectId[roomRectId.length - 2] + roomRectId[roomRectId.length - 1]
-            var takenlayer = d3.select("#takenLayer");
-            takenlayer.insert("rect")
-                    .attr("x",roomRect.attr("x"))
-                    .attr("y",roomRect.attr("y"))
-                    .attr("width",roomRect.attr("width"))
-                    .attr("height",roomRect.attr("height"))
+
+            // remove the selected room from the availableLayer
+            d3.select(t).remove();
+            // future implementation may want to track roomType
+            // not used here
+            return roomType;
+        }
+
+        // accept a room when the confirm button is clicked
+        // this moves the room from selected to taken
+        // also disables the confirm button and turns off onclick for available rooms
+        function acceptRoomSelection() {
+            var selectedlayer = d3.select("#selectedLayer");
+            var confirmSelection = selectedlayer.selectAll("rect");
+            // first check to see if there is a currently selected room
+            if (confirmSelection[0].length > 0) {
+                // confirm the room and move it to the taken layer
+                var confirmRoom = confirmSelection;
+                var confirmRoomId = confirmRoom.attr("id");
+                var newRoomRectId = "takenRoom" + confirmRoomId[confirmRoomId.length - 2] +
+                                                confirmRoomId[confirmRoomId.length - 1]
+                var takenlayer = d3.select("#takenLayer");
+                takenlayer.insert("rect")
+                    .attr("x",confirmRoom.attr("x"))
+                    .attr("y",confirmRoom.attr("y"))
+                    .attr("width",confirmRoom.attr("width"))
+                    .attr("height",confirmRoom.attr("height"))
                     .attr("id", newRoomRectId)
                     .style("fill", "#ff0000")
                     .style("fill-opacity", "0.4")
-                    .append("title").text("taken");*/
-            // remove the selected room from the availableLayer
-            d3.select(t).remove();
-            return roomType;
+                    .append("title").text("taken");
+
+                // remove the previously selected room from the selected layer
+                selectedlayer.selectAll("rect")
+                      .remove();
+
+                // disable the confirm room button
+                document.getElementById("confirmRoom").disabled = true;
+
+                // select the availableLayer rects and remove the onclick function
+                var roomlayer = d3.select("#availableLayer");
+                roomlayer.selectAll("rect")
+                          .on("click", function(d) { });
+            } else {
+                // should pop up something to tell them to select a room first
+                // no more time :-(
+            }
         }
+
+        // random selection of available rooms are made unavailable
+        function makeUnavailable(availableRects, remove) {
+            // move the selected room to unavailable
+            var roomRect = availableRects[0][remove];
+            var roomRectId = roomRect.attributes.id;
+            takenRoomRectId = "takenRoom" + roomRectId[roomRectId.length - 2] + roomRectId[roomRectId.length - 1]
+            var takenlayer = d3.select("#takenLayer");
+            takenlayer.insert("rect")
+                    .attr("x",roomRect.attributes.x.value)
+                    .attr("y",roomRect.attributes.y.value)
+                    .attr("width",roomRect.attributes.width.value)
+                    .attr("height",roomRect.attributes.height.value)
+                    .attr("id", takenRoomRectId)
+                    .style("fill", "#ff0000")
+                    .style("fill-opacity", "0.4")
+                    .append("title").text("taken");
+            // remove the selected room from the availableLayer
+            var roomid = "#" + roomRectId.value;
+            d3.selectAll(roomid)
+                .remove();
+          }
+
+         /*
+          * complements of
+          * http://stackoverflow.com/questions/1527803/generating-random-numbers-in-javascript-in-a-specific-range
+          * Returns a random integer between min and max
+          * Using Math.round() will give you a non-uniform distribution!
+          */
+           function getRandomInt (min, max) {
+                 return Math.floor(Math.random() * (max - min + 1)) + min;
+           }
 
         </script>
     </div>
