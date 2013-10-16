@@ -296,3 +296,57 @@ var housingData = [
 
 return housingData;
 }				
+$(document).ready(function() {
+	//Make floor changes whenever new building is selected from one of dropdown lists
+	$("select").change(function(){
+		
+		//storing current selected building
+		var drop=document.getElementById("choosequad");
+		var quadpick=drop.options[drop.selectedIndex].text;
+		drop=document.getElementById("choosejackson");
+		var jacksonpick=drop.options[drop.selectedIndex].text;
+		drop=document.getElementById("choosesouthside");
+		var southsidepick=drop.options[drop.selectedIndex].text;
+		$('.multiplechoices').hide();
+		//show associated floor options based on selected building
+		switch(quadpick){
+			case "Burton" :case "Crosby":
+				$("#BurtonCrosbyfloors").show();
+				break;
+			case "Lovejoy":
+				$("#LJfloors").show();
+				break;
+		}
+		switch(jacksonpick){
+			case "Anderson": case "Wilder":
+				$("#Towersfloors").show();
+				break;
+			case "O'Brien":
+				$("#Obrienfloors").show();
+				break;
+		}
+		
+		switch(southsidepick){
+			case "deKiewiet Tower": case "Valentine Tower":
+				$("#Southsidefloors").show();
+				break;
+			case "Maisonettes":
+				$("#Maisonettesfloors").show();
+				break;
+		}
+		
+		
+	
+	});
+	
+
+		
+});
+function hideOtherfloors () {
+	$('.multiplechoices').hide();
+	//initially show the default selections
+	$("#BurtonCrosbyfloors").show();
+	$("#Towersfloors").show();
+	$("#Southsidefloors").show();
+	
+};
