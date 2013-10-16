@@ -51,6 +51,19 @@
           <p id="instructions">      Your selection time is available when the "Confirm" button is enabled.</p>
           <p id="instructions">      Please click on your room choice then click on "Confirm". </p>
       </div>
+      <div id="roomMates" >
+          <p><b>You are currently registered as a 6 person group.</b> </p>
+          <p>Select your room. Drag and drop your
+          room mates to their rooms</p>
+          <textarea rows="6" cols="30">
+Joe Black
+Jim Smith
+Mike Fitzpatrick
+Bill Jones
+William Schmidt
+Andy Blye
+          </textarea>
+      </div>
 
       <script type="text/javascript">
         // javascript to manage the updating, selection and confirmation of room selection
@@ -59,9 +72,12 @@
         var secondInterval = 4000;
 
         // read the svg floor plan and add the elements to the visualization
-        d3.xml("Burton_2ndFloor_plain.svg", "img/svg+xml", function(xml) {
+        d3.xml("Anderson_3rd_floor_plain.svg", "img/svg+xml", function(xml) {
                 var importedNode = document.importNode(xml.documentElement, true);
                 d3.select("#viz").node().appendChild(importedNode);
+                var roomlayer = d3.select("#availableLayer");
+                roomlayer.selectAll("rect")
+                    .append("title").text("available");
 
                  // set up a timer to change some rooms from available to unavailable
                  // also to enable the confirm room selection button for use and enable

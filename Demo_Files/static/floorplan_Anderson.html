@@ -55,12 +55,16 @@
       <script type="text/javascript">
         // javascript to manage the updating, selection and confirmation of room selection
         var timer = 0;
-        var countToConfirm = 3;
+        var countToConfirm = 2;
+        var secondInterval = 4000;
 
         // read the svg floor plan and add the elements to the visualization
         d3.xml("Anderson_2nd_floor_plain.svg", "img/svg+xml", function(xml) {
                 var importedNode = document.importNode(xml.documentElement, true);
                 d3.select("#viz").node().appendChild(importedNode);
+                var roomlayer = d3.select("#availableLayer");
+                roomlayer.selectAll("rect")
+                    .append("title").text("available");
 
                  // set up a timer to change some rooms from available to unavailable
                  // also to enable the confirm room selection button for use and enable
@@ -98,7 +102,7 @@
                             // timers use is done - increment so that we don't keep doing this
                             timer = timer + 1;
                         }
-                    }, 5000);
+                    }, secondInterval);
         });
 
         // move a room from availble to selected.
@@ -199,7 +203,7 @@
         function makeUnavailable(availableRects, remove) {
             // move the selected room to unavailable
             var roomRect = availableRects[0][remove];
-            var roomRectId = roomRect.attributes.id;
+            var roomRectId = roomRect.attributes.id.value;
             takenRoomRectId = "takenRoom" + roomRectId[roomRectId.length - 2] + roomRectId[roomRectId.length - 1]
             var takenlayer = d3.select("#takenLayer");
             takenlayer.insert("rect")
@@ -212,7 +216,7 @@
                     .style("fill-opacity", "0.4")
                     .append("title").text("taken");
             // remove the selected room from the availableLayer
-            var roomid = "#" + roomRectId.value;
+            var roomid = "#" + roomRectId;
             d3.selectAll(roomid)
                 .remove();
           }
