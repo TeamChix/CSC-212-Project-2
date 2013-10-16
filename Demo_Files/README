@@ -1,0 +1,13 @@
+README for initial design 1
+-----------------------------------
+
+The Demo may be run using the python environment, webpy needs to be
+installed.
+
+From the CSC-212-Project-2/Demo_Files directory execute the following:
+>> python project2.py
+
+This will start a local web server at localhost:8080 (or http://0.0.0.0:8080/
+on the MAC if localhost is not defined).
+
+The prototype has been tested on Chrome
