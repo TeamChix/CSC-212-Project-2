@@ -6,18 +6,21 @@
   <head>
     <title>Housing Selection That Remain Open</title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="js/d3.v3.min.js"></script>
     <script type="text/javascript" src="js/buildSideBar.js"></script>
     <script type="text/javascript" src="js/getHousingDataForTreeMap.js"></script>
+    <script type="text/javascript" src="js/getHousingData.js"></script>
+    
     <link href="css/project2.css" media="all" type="text/css" rel="stylesheet">
     <style type="text/css">
     </style>
   </head>
-  <body>
+  <body onload="hideOtherfloors()">
     <div id="customDiv1"></div>
     <div id="customDiv2"></div>
     <div id="customDiv3"></div>
-  <div id="header">
+    <div id="header">
         <p></p>
     </div>
     <div id="sidebar" >
@@ -31,10 +34,23 @@
             <div id="quad">
                 <form name="quad">
                     <p align="center">
-                    <select name="choosequad">
+                    <select name="choosequad" id="choosequad">
                         <option value="./floorplan.html">Burton</option>
                         <option value="./floorplan.html">Crosby</option>
                         <option value="./floorplan.html">Lovejoy</option>
+                    </select>
+                    <br />
+                    <select id="BurtonCrosbyfloors" size="4" class="multiplechoices">
+                    	<option value="0">0th Floor</option>
+                        <option value="1">1st Floor</option>
+                        <option value="2">2nd Floor</option>
+                        <option value="3">3rd Floor</option>
+                    </select>
+                    <select id="LJfloors"  size="4" class="multiplechoices">
+						<option value="1">1st Floor</option>
+                        <option value="2">2nd Floor</option>
+                        <option value="3">3rd Floor</option>
+                        <option value="4">4th Floor</option>
                     </select>
                     <input type="button" onClick="location=document.quad.choosequad.options[document.quad.choosequad.selectedIndex].value;" value="Select Quad Building/Floor"></p>
                 </form>
@@ -42,10 +58,29 @@
             <div id="jackson">
                 <form name="jackson">
                     <p align="center">
-                    <select name="choosejackson">
-                        <option value="./floorplan_Anderson.html">Anderson</option>
-                        <option value="./floorplan_Anderson.html">Wilder</option>
-                        <option value="./floorplan_Anderson.html">O'Brien</option>
+                    <select name="choosejackson" id="choosejackson">
+                        <option value="./floorplan.html">Anderson</option>
+                        <option value="./floorplan.html">Wilder</option>
+                        <option value="./floorplan.html">O'Brien</option>
+                    </select>
+                    <br />
+                    <select id="Towersfloors" size="4" class="multiplechoices">
+                        <option value="1">1st Floor</option>
+                        <option value="2">2nd Floor</option>
+                        <option value="3">3rd Floor</option>
+                        <option value="4">4th Floor</option>
+                        <option value="5">5th Floor</option>
+                        <option value="6">6th Floor</option>
+                        <option value="7">7th Floor</option>
+                        <option value="8">8th Floor</option>
+                        <option value="9">9th Floor</option>
+                    </select>
+                    <select id="Obrienfloors" size="4" class="multiplechoices">
+                        <option value="1">1st Floor</option>
+                        <option value="2">2nd Floor</option>
+                        <option value="3">3rd Floor</option>
+                        <option value="4">4th Floor</option>
+                        <option value="5">5th Floor</option>
                     </select>
                     <input type="button" onClick="location=document.jackson.choosejackson.options[document.jackson.choosejackson.selectedIndex].value;" value="Select Jackson Building/Floor"></p>
                 </form>
@@ -53,13 +88,20 @@
             <div id="hillcourt">
                 <form name="hillcourt">
                     <p align="center">
-                    <select name="choosehillcourt">
+                    <select name="choosehillcourt" id="choosehillcourt">
                         <option value="./floorplan.html">Chambers</option>
                         <option value="./floorplan.html">Fairchild</option>
                         <option value="./floorplan.html">Gate</option>
                         <option value="./floorplan.html">Kendrick</option>
                         <option value="./floorplan.html">Munro</option>
                         <option value="./floorplan.html">Slater</option>
+                    </select>
+                    <br />
+                    <select id="Phasefloors" size="4" >
+						<option value="1">1st Floor</option>
+                        <option value="2">2nd Floor</option>
+                        <option value="3">3rd Floor</option>
+                        <option value="4">4th Floor</option>
                     </select>
                     <input type="button" onClick="location=document.hillcourt.choosehillcourt.options[document.hillcourt.choosehillcourt.selectedIndex].value;" value="Select Hillcourt Building/Floor">
                     </p>
@@ -69,16 +111,53 @@
             <div id="southside">
                 <form name="southside">
                     <p align="center">
-                    <select name="choosesouthside">
+                    <select name="choosesouthside" id="choosesouthside">
                         <option value="./floorplan.html">deKiewiet Tower</option>
                         <option value="./floorplan.html">Valentine Tower</option>
                         <option value="./floorplan.html">Maisonettes</option>
+                    </select>
+                    <br />
+                    <select id="Southsidefloors" size="4" class="multiplechoices">
+                        <option value="1">1st Floor</option>
+                        <option value="2">2nd Floor</option>
+                        <option value="3">3rd Floor</option>
+                        <option value="4">4th Floor</option>
+                        <option value="5">5th Floor</option>
+                        <option value="6">6th Floor</option>
+                        <option value="7">7th Floor</option>
+                        <option value="8">8th Floor</option>
+                        <option value="9">9th Floor</option>
+                        <option value="10">10th Floor</option>
+                        <option value="11">11th Floor</option>
+                    </select>
+                    <select id="Maisonettesfloors" size="4" class="multiplechoices">
+                        <option value="1">1st Floor</option>
                     </select>
                     <input type="button" onClick="location=document.southside.choosesouthside.options[document.southside.choosesouthside.selectedIndex].value;" value="Select Southside Building/Floor"></p>
                 </form>
 
             </div>
+            <div id="riverview">
+                <form name="riverview">
+                    <p align="center">
+                    <select name="chooseriverview" id="chooseriverview">
+                        <option value="A">Building A</option>
+                        <option value="B">Building B</option>
+                        <option value="C">Building C</option>
+                        <option value="D">Building D</option>
+                        <option value="E">Building E</option>
+                    </select>
+                    <br />
+                    <select id="Riverviewfloors" size="4" >
+						<option value="1">1st Floor</option>
+                        <option value="2">2nd Floor</option>
+                        <option value="3">3rd Floor</option>
+                        <option value="4">4th Floor</option>
+                    </select>
+                    <input type="button" onClick="location=document.riverview.chooseriverview.options[document.riverview.chooseriverview.selectedIndex].value;" value="Select Riverview Building/Floor"></p>
+                </form>
 
+            </div>
         </div>
     </div>
   </body>
